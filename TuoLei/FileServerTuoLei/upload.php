@@ -50,34 +50,7 @@ else {
     mysqli_close($con);
     move_uploaded_file($_FILES["file"]["tmp_name"], $url);
 
-    /* curl example! */
-//    $headers = array("Content-Type:multipart/form-data"); // cURL headers for file uploading
-//    $postfields = array("file" => "@".realpath($url), "user" => "Replicated", "key" => "Budweiser");
-//    $ch = curl_init();
-//    $options = array(
-//        CURLOPT_URL => "http://localhost:3000/endpoint.php",
-//        CURLOPT_HEADER => true,
-//        CURLOPT_POST => 1,
-//        CURLOPT_HTTPHEADER => $headers,
-//        CURLOPT_POSTFIELDS => $postfields,
-//        CURLOPT_INFILESIZE => $size,
-//        CURLOPT_RETURNTRANSFER => true
-//    ); // cURL options
-//    curl_setopt_array($ch, $options);
-//    curl_exec($ch);
-//    if(!curl_errno($ch))
-//    {
-//        $info = curl_getinfo($ch);
-//        if ($info['http_code'] == 200)
-//            $errmsg = "File uploaded successfully";
-//    }
-//    else
-//    {
-//        $errmsg = curl_error($ch);
-//    }
-//    curl_close($ch);
-//    echo $errmsg;
-//    exit;
+    include 'curl.php';
 
     //redirect
     $host  = $_SERVER['HTTP_HOST'];
