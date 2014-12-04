@@ -161,13 +161,13 @@ public class ClientFrame extends javax.swing.JFrame {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int index = DomainBox.getSelectedIndex();
         switch(index){
-            case 0: url = "zhongwei";
+            case 0: url = "http://weizhongsjsu.com/upload.php";
                     break;
             case 1: url = "http://littlehabit.net/upload.php";
                     break;
             case 2: url = "http://tuolei.org/upload.php";
                     break;
-            case 3: url = "Emy";
+            case 3: url = "http://emysdomain.com/upload.php";
                     break;
         }
         try {
@@ -184,8 +184,6 @@ public class ClientFrame extends javax.swing.JFrame {
             HttpResponse response = httpClient.execute(uploadFile);
             HttpEntity responseEntity = response.getEntity();
             System.out.println(response.toString());
-            BufferedReader br2 = new BufferedReader(
-            new InputStreamReader((responseEntity.getContent())));
         } catch (IOException e) {
             e.printStackTrace();
         } finally{
