@@ -1,0 +1,1 @@
+Please run the jar file int dist folder.
