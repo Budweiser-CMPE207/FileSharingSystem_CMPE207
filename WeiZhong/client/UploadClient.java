@@ -114,4 +114,37 @@ public class UploadClient {
 
 		return false;
     }  
+    
+    public static boolean auth(CloseableHttpClient httpClient, String username, String passwd, String uploadURL){
+        HttpPost httppost      = null;
+		HttpEntity resEntity   = null;
+		HttpResponse response  = null;
+		
+		try {
+		    httppost = new HttpPost(uploadURL+"login.php");  
+		    
+		    MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
+		    multipartEntity.addTextBody("username", username);
+		    multipartEntity.addTextBody("password", passwd);
+		    httppost.setEntity(multipartEntity.build());  
+            response  = httpClient.execute(httppost);  
+  
+            resEntity = response.getEntity();
+            if (resEntity != null)  {
+                BufferedReader br = new BufferedReader(new InputStreamReader((resEntity.getContent())));
+                String row;
+                while ((row = br.readLine()) != null) {
+                	if(row.equals("Success_user"))
+                		return true;
+                }
+                EntityUtils.consume(resEntity); 
+            }
+        }  
+        catch(Exception e) {
+        	e.printStackTrace();  
+        	return false;
+        }
+
+		return false;
+    }  
 }

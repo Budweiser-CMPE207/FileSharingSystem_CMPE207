@@ -28,11 +28,11 @@ public class MainProcessWindow extends JFrame implements ActionListener, Runnabl
 	private JPanel curWindow;
 	private Box windowHolder;
 	private static ConcurrentLinkedQueue<TaskType> taskQueue = new ConcurrentLinkedQueue<TaskType>();
-	private static CloseableHttpClient httpClient = null;  
+	CloseableHttpClient httpClient = null;  
 	static String phpURL = "http://localhost/php_test/upload.php";	
 	List<FileItem> fileList = new LinkedList<FileItem>();
 	
-	public MainProcessWindow(String phpURL)
+	public MainProcessWindow(CloseableHttpClient httpClient, String phpURL)
 	{
 		super("CMPE207 Course Project");
 		this.setLocation(300,30);
@@ -105,9 +105,8 @@ public class MainProcessWindow extends JFrame implements ActionListener, Runnabl
 		setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		repaint();
-		
-		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
-		httpClient = httpClientBuilder.build();  
+
+		this.httpClient = httpClient;
 		this.phpURL = phpURL;
 	}
 
