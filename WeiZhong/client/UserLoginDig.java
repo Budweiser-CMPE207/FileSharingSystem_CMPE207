@@ -42,9 +42,9 @@ public class UserLoginDig {
         		"User Authentication"));      
 
         Object[] options = {"Login","Cancel"};
-        int i = JOptionPane.showOptionDialog(null,pan,"CMPE207 Course Project",
+        int ret = JOptionPane.showOptionDialog(null,pan,"CMPE207 Course Project",
         		JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
-        if(i != 0 )
+        if(ret != 0 )
         	System.exit(0);
 
         name = username.getText();
