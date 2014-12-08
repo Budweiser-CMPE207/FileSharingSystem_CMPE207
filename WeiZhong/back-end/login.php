@@ -13,9 +13,14 @@ if (mysqli_connect_errno()) {
 
 $result = mysqli_query($con, "select * from users where username='$user_name' and password='$passwd' limit 1");
 if($row = mysqli_fetch_array($result)){
-    echo 'Success_user';
+	$id = uniqid();
+	
+    mysqli_query($con, "update users set uuid = '$id' where username='$user_name' and password='$passwd'");
+	echo 'Success_user'. ":" .$id;
 } else {
 	echo "Fail";
 }
+
+
 
 exit;

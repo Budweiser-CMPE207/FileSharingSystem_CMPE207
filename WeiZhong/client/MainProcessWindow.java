@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.BorderFactory;
@@ -15,20 +17,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-
-
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 
+
+@SuppressWarnings("serial")
 public class MainProcessWindow extends JFrame implements ActionListener, Runnable {
 
 	private StatusPanel statusPane;
@@ -39,6 +37,7 @@ public class MainProcessWindow extends JFrame implements ActionListener, Runnabl
 	static String phpURL = "http://localhost/php_test/upload.php";	
 	List<FileItem> fileList = new LinkedList<FileItem>();
 	JTextArea tasklist;
+	Timer timer = new Timer();
 	
 	public MainProcessWindow(CloseableHttpClient httpClient, String phpURL)
 	{
@@ -132,6 +131,8 @@ public class MainProcessWindow extends JFrame implements ActionListener, Runnabl
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		repaint();
 
+		PendingTaskDisplay td = new PendingTaskDisplay();
+		timer.schedule(td, 0, 100);
 		this.httpClient = httpClient;
 		this.phpURL = phpURL;
 	}
@@ -139,39 +140,21 @@ public class MainProcessWindow extends JFrame implements ActionListener, Runnabl
 	@Override
 	public void run() {
 		TaskType task;
-		StringBuffer sb = null;
-		int index = 1;
 		
 		while(true) {
 		try {
-			tasklist.setText(null);
-			sb = new StringBuffer();
 			
 		    if(taskQueue.isEmpty())
 		    	Thread.sleep(100);
 		    else {  	
-		    	task = taskQueue.remove();
-		    	
-				Iterator<TaskType> it = taskQueue.iterator();
-				while(it.hasNext())
-				{
-					TaskType t = it.next();
-					if(t.getOp() == 0)
-						sb.append("Task "+index+": Refresh File list \n");
-					if(t.getOp() == 1)
-						sb.append("Task "+index+":Upload files, location: "+t.getFileHandle().getName()+"\n");
-					if(t.getOp() == 2)
-						sb.append("Task "+index+":Delete a file, id: "+t.getID()+"\n");
-					index ++;
-				}
-				tasklist.setText(sb.toString());
-				
+				task = taskQueue.peek();
 		    	if(task.getOp() == 0)
 		    		refreshTable();
 		    	if(task.getOp() == 1)
 		    		uploadFiles(task.getFileHandle());	
 		    	if(task.getOp() == 2)
 		    		deleteFile(task.getID());		
+		    	taskQueue.remove();
 		    }
 			statusPane.changeStatus("Current File list as below: ");
 			pack();
@@ -289,5 +272,28 @@ public class MainProcessWindow extends JFrame implements ActionListener, Runnabl
 			this.setBackground(Color.white);
 		}
 
+	}
+	
+	public class PendingTaskDisplay extends TimerTask
+	{
+		 public void run(){
+				StringBuffer sb = null;
+				int index = 1;
+				 
+				sb = new StringBuffer();
+				Iterator<TaskType> it = taskQueue.iterator();
+				while(it.hasNext())
+				{
+					TaskType t = it.next();
+					if(t.getOp() == 0)
+						sb.append("Pending Task "+index+": Refresh File list \n");
+					if(t.getOp() == 1)
+						sb.append("Pending Task "+index+":Upload files, location: "+t.getFileHandle().getName()+"\n");
+					if(t.getOp() == 2)
+						sb.append("Pending Task "+index+":Delete a file, id: "+t.getID()+"\n");
+					index ++;
+				}
+				tasklist.setText(sb.toString());
+		 }
 	}
 }

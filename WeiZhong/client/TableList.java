@@ -10,12 +10,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 
+@SuppressWarnings("serial")
 public class TableList extends JPanel{
 	private static Font itemFont = new Font("Arial Narrow",Font.PLAIN,15);
 	private static Font headerFont = new Font("Arial Narrow",Font.BOLD,14);
 	private static Color color = new Color(45,61,78);
 
-	@SuppressWarnings("null")
 	public TableList(List<FileItem> itemList)
 	{
 		super();

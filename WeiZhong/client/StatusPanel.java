@@ -1,11 +1,13 @@
 
 import java.awt.Color;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+@SuppressWarnings("serial")
 public class StatusPanel extends JPanel {
 
 	public StatusPanel(String status)

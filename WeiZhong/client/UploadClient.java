@@ -14,7 +14,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 
 
 public class UploadClient {
-
+    private static String login_sessionid = null;
+	
     public static boolean uploadFile(CloseableHttpClient httpClient, File file, String uploadURL){
         HttpPost httppost      = null;
 		HttpEntity resEntity   = null;
@@ -25,6 +26,7 @@ public class UploadClient {
 		    
 		    MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
 		    multipartEntity.addTextBody("user", "Wei Zhong");
+		    multipartEntity.addTextBody("session_id", login_sessionid);
 		    multipartEntity.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
 		    httppost.setEntity(multipartEntity.build());  
             response  = httpClient.execute(httppost);  
@@ -60,6 +62,7 @@ public class UploadClient {
 		    
 		    MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
 		    multipartEntity.addTextBody("user", "Wei Zhong");
+		    multipartEntity.addTextBody("session_id", login_sessionid);
 		    httppost.setEntity(multipartEntity.build());  
             response  = httpClient.execute(httppost);  
    
@@ -93,6 +96,7 @@ public class UploadClient {
 		    
 		    MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
 		    multipartEntity.addTextBody("id", id);
+		    multipartEntity.addTextBody("session_id", login_sessionid);
 		    httppost.setEntity(multipartEntity.build());  
             response  = httpClient.execute(httppost);  
   
@@ -134,8 +138,11 @@ public class UploadClient {
                 BufferedReader br = new BufferedReader(new InputStreamReader((resEntity.getContent())));
                 String row;
                 while ((row = br.readLine()) != null) {
-                	if(row.equals("Success_user"))
+                	String[] output = row.split(":");
+                	if(output.length == 2 && output[0].equals("Success_user")){
+                		login_sessionid = output[1];
                 		return true;
+                	}
                 }
                 EntityUtils.consume(resEntity); 
             }

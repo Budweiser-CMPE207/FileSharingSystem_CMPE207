@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 
+@SuppressWarnings("serial")
 public class FileTablePanel extends JPanel {
 
 	public boolean autoComplete = false;
